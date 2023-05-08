@@ -4,22 +4,30 @@ import numpy as np
 
 lorenz_bound = 40
 max_systems = 5
-chaotic_systems = {'lorenz':{'params':['sigma,beta,rho']}}
+chaotic_systems = {"lorenz": {"params": ["sigma,beta,rho"]}}
 system_names = list(chaotic_systems.keys())
 
 num_chaotic_sys = len(chaotic_systems)
 
 
 def check_series(series):
-    if (series ** 2).sum(1).max() > lorenz_bound**2:
+    if (series**2).sum(1).max() > lorenz_bound**2:
         return False
 
     return True
 
-def generate_lorenz(init_point, len, step_size, params):
+
+def generate_lorenz(init_point, len, step_size, params=None, draw_params=True):
+    assert (params == None and draw_params == True) or (
+        params != None and draw_params == False
+    ), "either provide params or draw_params=True, not both!"
+
+    if draw_params == True:
+        params = np.abs([8, 2.66, 22] * (1 + 0.4 * np.random.randn(3)))
+
     command_line = (
         "--init_point",
-        ' '.join(str(x) for x in init_point),
+        " ".join(str(x) for x in init_point),
         "--points",
         str(len),
         "--step",
@@ -43,10 +51,9 @@ def generate_lorenz(init_point, len, step_size, params):
     else:
         return ([], False)
 
+
 def sample_world():
+    num_systems = np.random.randint(1, 6)
+    system_number = np.random.randint(0, num_chaotic_sys, num_systems)
 
-    num_systems = np.random.randint(1,6)
-    system_number = np.random.randint(0,num_chaotic_sys, num_systems)
-
-    for 
-
+    # for
