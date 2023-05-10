@@ -141,6 +141,8 @@ def sample_world(
         l, L, r = np.linalg.svd(W, full_matrices=False)
 
     else:
+        assert not change_dim, "Cannot have change_dim with rotate=False."
+        new_dim = old_dim
         l = 1
         r = 1
 
