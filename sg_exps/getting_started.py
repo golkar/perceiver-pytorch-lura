@@ -6,6 +6,8 @@ from perceiver_pytorch import Perceiver
 import matplotlib.pyplot as plt
 import numpy as np
 
+import sys
+
 sys.path.append("../../chaospy/")
 from src.dynamic_system import DynamicSystem
 
@@ -54,6 +56,28 @@ for fact in [4, 8, 16]:
         # "--show_plots",
         # "--add_2d_gif",
         "lorenz",
+    )
+    chaotic_system = DynamicSystem(input_args=command_line, show_log=False)
+    chaotic_system.run()
+    plt.plot(
+        chaotic_system.model.get_coordinates()[:, 0],
+        chaotic_system.model.get_coordinates()[:, 1],
+        "-o",
+        markersize=2,
+        label="step: {}, num_points={}".format(50 * fact, 10 * fact),
+    )
+for fact in [2, 4, 8]:
+    command_line = (
+        "--init_point",
+        "7 3 2",
+        "--points",
+        str(30 * fact),
+        "--step",
+        str(5 * fact),
+        # "--save_plots",
+        # "--show_plots",
+        # "--add_2d_gif",
+        "rossler",
     )
     chaotic_system = DynamicSystem(input_args=command_line, show_log=False)
     chaotic_system.run()
