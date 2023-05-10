@@ -84,6 +84,7 @@ def sample_world(
     change_dim=True,
     new_dim=None,
     seed=1337,
+    num_hierarchies=None,
 ):
     rng = np.random.default_rng(seed)
 
@@ -150,16 +151,24 @@ def sample_world(
         r = 1
 
     if dilate:
-        hierarchies = rng.integers(1, max_hierarchies)
-        sys_scales = np.sort([1] + list(rng.choice(scales, hierarchies - 1)))
+        if num_hierarchies == None:
+            num_hierarchies = rng.integers(1, max_hierarchies)
+        else:
+            assert (
+                num_hierarchies <= max_hierarchies
+            ), "The number of requested hierarchies exceeds the number of inbuilt scales. You can add scales in the microcosm.py code."
+        sys_scales = np.sort(
+            [1] + list(rng.choice(scales, num_hierarchies - 1, replace=False))
+        )
 
         L_dim = min(old_dim, new_dim)
-        n = L_dim // hierarchies
+        n = L_dim // num_hierarchies
         L = [x for el in sys_scales for x in [el] * n]
         L = [1] * (L_dim - len(L)) + L
         L = np.diag(L)
 
     else:
+        assert num_hierarchies == None, "Cannot have num_hierarchies without dilation."
         L = 1
         r = 1
 
